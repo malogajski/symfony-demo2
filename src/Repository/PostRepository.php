@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -11,13 +13,25 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Post|null findOneBy(array $criteria, array $orderBy = null)
  * @method Post[]    findAll()
  * @method Post[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @ApiResource()
+ * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  */
 class PostRepository extends ServiceEntityRepository
 {
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
     }
+
+
 
     // /**
     //  * @return Post[] Returns an array of Post objects
