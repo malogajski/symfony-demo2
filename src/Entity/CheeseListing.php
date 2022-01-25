@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CheeseListingRepository;
 use Carbon\Carbon;
@@ -23,6 +25,8 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  * @ORM\Entity(repositoryClass=CheeseListingRepository::class)
  * @ApiFilter(BooleanFilter::class, properties={"isPublished"})
  * @ApiFilter(SearchFilter::class, properties={"title":"partial", "description":"partial"})
+ * @ApiFilter(RangeFilter::class, properties={"price"})
+ * @ApiFilter(PropertyFilter::class)
  */
 class CheeseListing
 {
@@ -88,6 +92,18 @@ class CheeseListing
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    /**
+     * @Groups("cheese_listing:read")
+     */
+    public function getShortDescription(): ?string
+    {
+        if (strlen($this->description) < 40) {
+            return $this->description;
+        }
+
+        return substr($this->description, 0, 40) . '...';
     }
 
     public function setDescription(string $description): self
